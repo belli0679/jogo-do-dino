@@ -4,10 +4,16 @@ var chao, chaofotinha;
 
 var chaoinvisivel;
 
+var nuvenzinhas, nuvenzinhafotinha;
+
+
+
 function preload(){
     trexCorrendo = loadAnimation("trex1.png", "trex3.png", "trex4.png");
+    
     chaofotinha = loadImage("ground2.png");
 
+    nuvenzinhafotinha = loadImage("cloud.png");
 }
 
 function setup(){
@@ -26,14 +32,18 @@ function setup(){
     chaoinvisivel = createSprite(200, 190, 400, 10);
     chaoinvisivel.visible = false;
 
+    //var numeroaleatorio = Math.round(random(1,100));
+    //console.log(numeroaleatorio);
+
 }
 
 function draw(){
 
     //cria um fundo branco
     background("white")
+    //console.log(frameCount);
 
-    console.log(trex.y);
+    //console.log(trex.y);
 
     //fazendo o trex pular
     if(keyDown("space") && trex.y >= 150){
@@ -50,8 +60,27 @@ function draw(){
         chao.x = chao.width/2;
     }
 
+    nuvenzinhasAleatorias();
 
     //desenha todos os sprites
     drawSprites();
+
+}
+
+function nuvenzinhasAleatorias(){
+
+    if(frameCount % 60 === 0){
+
+        nuvenzinhas = createSprite (600, 100, 40, 10);
+        nuvenzinhas.addImage(nuvenzinhafotinha);
+        
+        nuvenzinhas.y = Math.round(random (10, 100));
+        nuvenzinhas.velocityX = -3;
+        
+        nuvenzinhas.depth = trex.depth;
+
+        trex.depth = trex.depth + 1;
+        
+    }
 
 }
