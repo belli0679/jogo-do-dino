@@ -6,7 +6,9 @@ var chaoinvisivel;
 
 var nuvenzinhas, nuvenzinhafotinha;
 
+var cactosObs, obs1, obs2, obs3, obs4, obs5, obs6; 
 
+var placar;
 
 function preload(){
     trexCorrendo = loadAnimation("trex1.png", "trex3.png", "trex4.png");
@@ -14,6 +16,14 @@ function preload(){
     chaofotinha = loadImage("ground2.png");
 
     nuvenzinhafotinha = loadImage("cloud.png");
+
+    obs1 = loadImage("obstacle1.png");
+    obs2 = loadImage("obstacle2.png");
+    obs3 = loadImage("obstacle3.png");
+    obs4 = loadImage("obstacle4.png");
+    obs5 = loadImage("obstacle5.png");
+    obs6 = loadImage("obstacle6.png");
+
 }
 
 function setup(){
@@ -32,8 +42,13 @@ function setup(){
     chaoinvisivel = createSprite(200, 190, 400, 10);
     chaoinvisivel.visible = false;
 
+    //CONCATENAÇÃO
+    //console.log("oi"+" Izabelli");
+
     //var numeroaleatorio = Math.round(random(1,100));
     //console.log(numeroaleatorio);
+
+    placar = 0;
 
 }
 
@@ -42,6 +57,9 @@ function draw(){
     //cria um fundo branco
     background("white")
     //console.log(frameCount);
+
+    text("Placar: "+ placar, 500, 50);
+    placar = placar + Math.round(frameCount/60);
 
     //console.log(trex.y);
 
@@ -62,6 +80,8 @@ function draw(){
 
     nuvenzinhasAleatorias();
 
+    cactos();
+
     //desenha todos os sprites
     drawSprites();
 
@@ -80,7 +100,45 @@ function nuvenzinhasAleatorias(){
         nuvenzinhas.depth = trex.depth;
 
         trex.depth = trex.depth + 1;
+
+        nuvenzinhas.lifetime = 250;
         
     }
+
+}
+
+function cactos(){
+
+    if(frameCount % 60 === 0){
+
+        cactosObs = createSprite (600, 165, 10, 40);
+        cactosObs.velocityX = -6;
+
+        var um = Math.round(random(1, 6));
+
+        switch(um){
+            
+            case 1: cactosObs.addImage(obs1);
+            break;
+            case 2: cactosObs.addImage(obs2);
+            break;
+            case 3: cactosObs.addImage(obs3);
+            break;
+            case 4: cactosObs.addImage(obs4);
+            break;
+            case 5: cactosObs.addImage(obs5);
+            break;
+            case 6: cactosObs.addImage(obs6);
+            break;
+            default: break;
+        }
+
+        cactosObs.scale = 0.5;
+
+        cactosObs.lifetime = 250;
+
+    }
+
+
 
 }
