@@ -4,11 +4,17 @@ var chao, chaofotinha;
 
 var chaoinvisivel;
 
-var nuvenzinhas, nuvenzinhafotinha;
+var nuvenzinhas, nuvenzinhafotinha, grupodenuvens;
 
-var cactosObs, obs1, obs2, obs3, obs4, obs5, obs6; 
+var cactosObs, obs1, obs2, obs3, obs4, obs5, obs6, grupodeobs; 
 
 var placar;
+
+var restart = 0;
+
+var jogando = 1;
+
+var estado = jogando;
 
 function preload(){
     trexCorrendo = loadAnimation("trex1.png", "trex3.png", "trex4.png");
@@ -42,6 +48,9 @@ function setup(){
     chaoinvisivel = createSprite(200, 190, 400, 10);
     chaoinvisivel.visible = false;
 
+    grupodenuvens = new Group();
+    grupodeobs = new Group();
+
     //CONCATENAÇÃO
     //console.log("oi"+" Izabelli");
 
@@ -59,28 +68,47 @@ function draw(){
     //console.log(frameCount);
 
     text("Placar: "+ placar, 500, 50);
-    placar = placar + Math.round(frameCount/60);
+    
+    if(estado === jogando){
+        
+        placar = placar + Math.round(frameCount/60);
+
+        if(keyDown("space") && trex.y >= 150){
+            trex.velocityY = -10;
+        }
+
+        trex.velocityY = trex.velocityY + 1;
+
+        chao.velocityX = -2;
+
+        if(chao.x < 0){
+            chao.x = chao.width/2;
+        }
+
+        nuvenzinhasAleatorias();
+
+        cactos();
+
+        if(grupodeobs.isTouching (trex)){
+
+            estado = restart;
+
+        }
+
+    } else if (estado === restart){
+
+        grupodeobs.setVelocityXEach (0);
+
+        grupodenuvens.setVelocityXEach (0);
+
+        chao.velocityX = 0;
+
+    }
 
     //console.log(trex.y);
 
-    //fazendo o trex pular
-    if(keyDown("space") && trex.y >= 150){
-        trex.velocityY = -10;
-    }
-
-    //sistema de gravidade
-    trex.velocityY = trex.velocityY + 1;
-
     //impede que o trex caixa
     trex.collide(chaoinvisivel);
-    chao.velocityX = -2;
-    if(chao.x < 0){
-        chao.x = chao.width/2;
-    }
-
-    nuvenzinhasAleatorias();
-
-    cactos();
 
     //desenha todos os sprites
     drawSprites();
@@ -100,6 +128,8 @@ function nuvenzinhasAleatorias(){
         nuvenzinhas.depth = trex.depth;
 
         trex.depth = trex.depth + 1;
+
+        grupodenuvens.add(nuvenzinhas);
 
         nuvenzinhas.lifetime = 250;
         
@@ -134,6 +164,8 @@ function cactos(){
         }
 
         cactosObs.scale = 0.5;
+
+        grupodeobs.add(cactosObs);
 
         cactosObs.lifetime = 250;
 
