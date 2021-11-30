@@ -1,4 +1,4 @@
-var trex, trexCorrendo, trexbateu;
+var trex, trexCorrendo, trexbateu, checkpoint, trexpulandoSom;
 
 var chao, chaofotinha;
 
@@ -14,7 +14,7 @@ var restart = 0;
 
 var jogando = 1;
 
-var gameover, gameoverimage;
+var gameover, gameoverimage, gameoverSom;
 
 var resetar, resetarimage;
 
@@ -42,6 +42,12 @@ function preload(){
     obs4 = loadImage("obstacle4.png");
     obs5 = loadImage("obstacle5.png");
     obs6 = loadImage("obstacle6.png");
+
+    checkpoint = loadSound("checkPoint.mp3");
+
+    trexpulandoSom = loadSound("jump.mp3");
+
+    gameoverSom = loadSound("die.mp3");
 
 }
 
@@ -104,15 +110,22 @@ function draw(){
     if(estado === jogando){
         
         placar = placar + Math.round(frameCount/60);
+        if(placar > 0 && placar % 100 === 0){
+            checkpoint.play();
+
+        }
+
 
         if(keyDown("space") && trex.y >= 150){
-            trex.velocityY = -10;
+            trex.velocityY = -12;
+            trexpulandoSom.play();
+
         }
 
         //sistema de gravidade
         trex.velocityY = trex.velocityY + 1;
 
-        chao.velocityX = -2;
+        chao.velocityX = -(2 + placar/100);
 
         if(chao.x < 0){
             chao.x = chao.width/2;
@@ -125,6 +138,7 @@ function draw(){
         if(grupodeobs.isTouching (trex)){
 
             estado = restart;
+            gameoverSom.play();
 
         }
 
@@ -184,7 +198,7 @@ function cactos(){
     if(frameCount % 60 === 0){
 
         cactosObs = createSprite (600, 165, 10, 40);
-        cactosObs.velocityX = -6;
+        cactosObs.velocityX = -(6 + placar/100);
 
         var um = Math.round(random(1, 6));
 
