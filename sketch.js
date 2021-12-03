@@ -20,6 +20,8 @@ var resetar, resetarimage;
 
 var estado = jogando;
 
+var mensagem = "isso é uma mensagem";
+
 function preload(){
 
     //carrega as animações
@@ -97,6 +99,8 @@ function setup(){
 
 function draw(){
 
+    //console.log(mensagem);
+
     //cria um fundo branco
     background("white")
     //console.log(frameCount);
@@ -109,12 +113,14 @@ function draw(){
     //as condiçoes do jogo
     if(estado === jogando){
         
-        placar = placar + Math.round(frameCount/60);
+        placar = placar + Math.round(frameRate()/60);
         if(placar > 0 && placar % 100 === 0){
             checkpoint.play();
 
         }
 
+        gameover.visible = false;
+        resetar.visible = false;
 
         if(keyDown("space") && trex.y >= 150){
             trex.velocityY = -12;
@@ -137,6 +143,8 @@ function draw(){
 
         if(grupodeobs.isTouching (trex)){
 
+            gameover.visible = true;
+            resetar.visible = true;
             estado = restart;
             gameoverSom.play();
 
@@ -158,6 +166,9 @@ function draw(){
 
         trex.velocityY = 0;
         
+        if(mousePressedOver(resetar)){
+            reset();
+        }
 
     }
 
@@ -166,8 +177,26 @@ function draw(){
     //impede que o trex caixa
     trex.collide(chaoinvisivel);
 
+    
+
     //desenha todos os sprites
     drawSprites();
+
+}
+
+function reset(){
+    
+    estado = jogando;
+
+    gameover.visible = false;
+    resetar.visible = false;
+
+    grupodenuvens.destroyEach();
+    grupodeobs.destroyEach();
+
+    trex.changeAnimation("correndo", trexCorrendo);
+
+    placar = 0;
 
 }
 
